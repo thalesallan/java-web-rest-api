@@ -7,8 +7,8 @@
     "startCommand": "java -Dserver.port=$PORT -Dspring.profiles.active=prod -Xmx400m -jar target/java-web-rest-api-0.0.1-SNAPSHOT.jar",
     "numReplicas": 1,
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 3,
-    "healthcheckPath": "/health",
+    "restartPolicyMaxRetries": 3,    
+    "healthcheckPath": "/api/v1/health",
     "healthcheckTimeout": 300
   }
 }
