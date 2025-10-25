@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>CORS Test</h1>
+    
+    <div>
+        <h3>Teste 1: GET Health Check</h3>
+        <button onclick="testHealthCheck()">Test Health Check</button>
+        <div id="health-result" class="result"></div>
+    </div>
+
+    <div>
+        <h3>Teste 2: POST CORS Test</h3>
+        <button onclick="testCorsPost()">Test CORS POST</button>
+        <div id="cors-result" class="result"></div>
+    </div>
+
+    <div>
+        <h3>Teste 3: OPTIONS Preflight</h3>
+        <button onclick="testPreflight()">Test Preflight</button>
+        <div id="preflight-result" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api/v1';
+
+        async function testHealthCheck() {
+            const resultDiv = document.getElementById('health-result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/health`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.text();
+                    resultDiv.innerHTML = `<div class="success">✅ SUCCESS: ${data}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ HTTP Error: ${response.status}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ CORS Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testCorsPost() {
+            const resultDiv = document.getElementById('cors-result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/cors-test`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        test: 'CORS test data',
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `<div class="success">✅ SUCCESS: ${JSON.stringify(data, null, 2)}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ HTTP Error: ${response.status}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ CORS Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testPreflight() {
+            const resultDiv = document.getElementById('preflight-result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/health`, {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Custom-Header': 'test'
+                    }
+                });
+                
+                const headers = {};
+                response.headers.forEach((value, key) => {
+                    headers[key] = value;
+                });
+                
+                resultDiv.innerHTML = `<div class="success">✅ OPTIONS Success: ${JSON.stringify(headers, null, 2)}</div>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Preflight Error: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
