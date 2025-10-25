@@ -26,9 +26,7 @@ jobs:
         node-version: '20'
 
     - name: 📦 Instalar semantic-release
-      run: npm install semantic-release @semantic-release/github
-
-    - name: 🔧 Criar configuração do semantic-release
+      run: npm install semantic-release @semantic-release/github    - name: 🔧 Criar configuração do semantic-release
       run: |
         cat > .releaserc.json << 'EOF'
         {
@@ -40,7 +38,9 @@ jobs:
             "@semantic-release/github"
           ]
         }
-        EOF    - name: 🔍 Verificar commits para release
+        EOF
+
+    - name: 🔍 Verificar commits para release
       id: check
       run: |
         # Verifica se há commits desde a última tag que justifiquem uma release
