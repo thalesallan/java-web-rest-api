@@ -31,11 +31,10 @@ jobs:
         if [ "${{ github.event_name }}" = "release" ]; then
           echo "🏷️ Tag da Release: ${{ github.event.release.tag_name }}"
         fi
-    
-    - name: ☕ Configurar JDK 11
+      - name: ☕ Configurar JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'temurin'        
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
