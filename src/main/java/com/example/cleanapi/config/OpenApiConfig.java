@@ -4,12 +4,14 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * OpenAPI/Swagger configuration with dynamic version and build info
@@ -51,9 +53,11 @@ public class OpenApiConfig {
             • Maven + GitHub Actions
             • Railway Deploy
             """, 
-            gitBranch, appVersion, buildTimestamp, deployUrl, deployUrl);
-
-        return new OpenAPI()
+            gitBranch, appVersion, buildTimestamp, deployUrl, deployUrl);        return new OpenAPI()
+                .servers(List.of(
+                    new Server().url("https://java-web-api.up.railway.app").description("Production Server"),
+                    new Server().url("http://localhost:8080").description("Development Server")
+                ))
                 .info(new Info()
                         .title("🌟 Clean Architecture REST API")
                         .version(appVersion + " (" + gitBranch + ")")

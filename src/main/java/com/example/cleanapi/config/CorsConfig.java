@@ -26,11 +26,10 @@ public class CorsConfig {
 
     private static final List<String> ALLOWED_METHODS = Arrays.asList(
         "GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"
-    );
-
-    /**
+    );    /**
      * Configuração CORS como Bean Principal para garantir precedência
      * Substitui qualquer configuração padrão do Spring Boot
+     * Configuração específica para Swagger UI funcionar corretamente
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -42,15 +41,27 @@ public class CorsConfig {
         // Métodos HTTP permitidos
         configuration.setAllowedMethods(ALLOWED_METHODS);
         
-        // Headers permitidos
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        // Headers permitidos - importante para Swagger UI
+        configuration.setAllowedHeaders(Arrays.asList(
+            "*", 
+            "Authorization", 
+            "Content-Type", 
+            "Accept", 
+            "Origin", 
+            "Access-Control-Request-Method", 
+            "Access-Control-Request-Headers"
+        ));
         
         // Permitir cookies/credentials (necessário para Swagger UI)
         configuration.setAllowCredentials(true);
         
         // Headers expostos no response
         configuration.setExposedHeaders(Arrays.asList(
-            "Content-Type", "Authorization", "X-Total-Count"
+            "Content-Type", 
+            "Authorization", 
+            "X-Total-Count",
+            "Access-Control-Allow-Origin",
+            "Access-Control-Allow-Credentials"
         ));
         
         // Cache do preflight
