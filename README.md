@@ -155,6 +155,43 @@ As configurações da aplicação estão no arquivo `application.properties`:
 - Logs de SQL habilitados (desenvolvimento)
 - Console H2 habilitado
 
+## 🌐 Deploy e URL da API
+
+### 🚂 Railway 
+1. Acesse [railway.app](https://railway.app)
+2. Faça login com GitHub
+3. **New Project** → **Deploy from GitHub repo**
+4. Selecione este repositório
+5. Aguarde o deploy automático (5-10 minutos)
+6. **URL será**: `https://java-web-rest-api-production.railway.app`
+
+**Configuração automática**: O arquivo `railway.json`
+
+### 📋 URLs Importantes Após Deploy
+Substitua `{URL_DA_APLICACAO}` pela URL da sua plataforma:
+
+- **🏠 API Base**: `{URL_DA_APLICACAO}/`
+- **📚 Swagger UI**: `{URL_DA_APLICACAO}/swagger-ui.html`
+- **💚 Health Check**: `{URL_DA_APLICACAO}/api/v1/users/health`
+- **📖 OpenAPI Docs**: `{URL_DA_APLICACAO}/api-docs`
+
+### 🧪 Testando a API Online
+```bash
+# Health check
+curl https://sua-app.railway.app/api/v1/users/health
+
+# Criar usuário
+curl -X POST https://sua-app.railway.app/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{"name": "João Silva", "email": "joao@example.com"}'
+
+# Listar usuários
+curl https://sua-app.railway.app/api/v1/users
+```
+
+### ⚡ Deploy Automático
+Toda vez que você fizer `git push origin main`, a aplicação será automaticamente atualizada na plataforma!
+
 ## 📚 Benefícios desta Arquitetura
 
 1. **Manutenibilidade**: Código organizado e fácil de manter
