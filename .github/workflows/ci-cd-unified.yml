@@ -61,7 +61,6 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
-      packages: write
     
     steps:
     - name: 📥 Checkout
@@ -94,27 +93,16 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: npx semantic-release
 
-    - name: ☕ Setup JDK 17 (para publish)
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        server-id: github
-        settings-path: ${{ github.workspace }}
-
-    - name: 📥 Download JAR artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: app-jar
-        path: target/
-
-    - name: 📦 Publicar no GitHub Packages (se release foi criada)
+    - name: 📦 Status da release
       run: |
         if git describe --tags --exact-match HEAD >/dev/null 2>&1; then
-          echo "🏷️ Tag encontrada, publicando no GitHub Packages..."
-          mvn deploy -s $GITHUB_WORKSPACE/settings.xml -DskipTests
+          echo "✅ Release criada: $(git describe --tags --exact-match HEAD)"
+          echo "🎯 Tag: $(git describe --tags --exact-match HEAD)"
+          echo "📦 Aplicação pronta para deploy!"
         else
-          echo "ℹ️ Nenhuma tag criada, pulando publicação"
+          echo "ℹ️ Nenhuma release criada neste commit"
+          echo "💡 Para criar release, use commits convencionais:"
+          echo "   - feat: nova funcionalidade"
+          echo "   - fix: correção de bug"
+          echo "   - BREAKING CHANGE: mudança incompatível"
         fi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
