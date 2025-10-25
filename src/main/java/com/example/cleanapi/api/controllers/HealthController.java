@@ -18,6 +18,6 @@ public class HealthController {
     @Operation(summary = "Health check", description = "Simple health check endpoint")
     @ApiResponse(responseCode = "200", description = "Service is healthy")
     public ResponseEntity<String> healthCheck() {
-        return ResponseEntity.ok("User service is running!");
+        return ResponseEntity.ok("Application service is running!");
     }
 }
