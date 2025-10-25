@@ -26,31 +26,41 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         List<String> origins = Arrays.asList(allowedOrigins.split(","));
         
-        registry.addMapping("/**")
-                .allowedOrigins(origins.toArray(new String[0]))
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH")
-                .allowedHeaders("*")
-                .allowCredentials(false) // Desabilitado para simplicidade
-                .maxAge(3600); // Cache preflight por 1 hora
+        // Se contém "*", usar allowedOriginPatterns em vez de allowedOrigins
+        if (origins.contains("*")) {
+            registry.addMapping("/**")
+                    .allowedOriginPatterns("*")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH")
+                    .allowedHeaders("*")
+                    .allowCredentials(false)
+                    .maxAge(3600);
+        } else {
+            registry.addMapping("/**")
+                    .allowedOrigins(origins.toArray(new String[0]))
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH")
+                    .allowedHeaders("*")
+                    .allowCredentials(false)
+                    .maxAge(3600);
+        }
     }    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
         // Origens permitidas baseadas na configuração
         List<String> origins = Arrays.asList(allowedOrigins.split(","));
-        configuration.setAllowedOrigins(origins);
+        
+        // Se contém "*", usar allowedOriginPatterns
+        if (origins.contains("*")) {
+            configuration.addAllowedOriginPattern("*");
+        } else {
+            configuration.setAllowedOrigins(origins);
+        }
         
         // Headers permitidos
         configuration.addAllowedHeader("*");
         
         // Métodos HTTP permitidos
-        configuration.addAllowedMethod("GET");
-        configuration.addAllowedMethod("POST");
-        configuration.addAllowedMethod("PUT");
-        configuration.addAllowedMethod("DELETE");
-        configuration.addAllowedMethod("OPTIONS");
-        configuration.addAllowedMethod("HEAD");
-        configuration.addAllowedMethod("PATCH");
+        configuration.addAllowedMethod("*");
         
         // Credentials desabilitados para simplicidade
         configuration.setAllowCredentials(false);
