@@ -36,14 +36,17 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: '11'
-        distribution: 'temurin'        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+        distribution: 'temurin'        
+        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
     - name: 🧪 Executar testes
       run: mvn -B test --file pom.xml
 
     - name: 🔨 Compilar com Maven
-      run: mvn -B package --file pom.xml    - name: ✅ Verificar integridade do build
+      run: mvn -B package --file pom.xml
+
+    - name: ✅ Verificar integridade do build
       run: mvn -B verify --file pom.xml
 
     - name: 📦 Publicar no GitHub Packages
