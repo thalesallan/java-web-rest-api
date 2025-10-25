@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test CORS Production</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            max-width: 800px; 
+            margin: 0 auto;
+        }
+        .result { 
+            margin: 10px 0; 
+            padding: 15px; 
+            border-radius: 5px; 
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        .success { 
+            background-color: #d4edda; 
+            border-color: #c3e6cb; 
+            color: #155724; 
+        }
+        .error { 
+            background-color: #f8d7da; 
+            border-color: #f5c6cb; 
+            color: #721c24; 
+        }
+        button { 
+            padding: 12px 24px; 
+            margin: 8px; 
+            cursor: pointer; 
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test CORS Production - Railway</h1>
+    <p><strong>API Base:</strong> https://java-web-api.up.railway.app</p>
+    
+    <div>
+        <h3>🔍 Test 1: GET Health Check</h3>
+        <button onclick="testHealthCheck()">Test GET /api/v1/health</button>
+        <div id="health-result" class="result"></div>
+    </div>
+
+    <div>
+        <h3>📤 Test 2: POST CORS Test</h3>
+        <button onclick="testCorsPost()">Test POST /api/v1/cors-test</button>
+        <div id="cors-result" class="result"></div>
+    </div>
+
+    <div>
+        <h3>⚡ Test 3: Preflight OPTIONS</h3>
+        <button onclick="testWithCustomHeaders()">Test with Custom Headers</button>
+        <div id="preflight-result" class="result"></div>
+    </div>
+
+    <div>
+        <h3>🌐 Test 4: All Users Endpoint</h3>
+        <button onclick="testGetUsers()">Test GET /api/v1/users</button>
+        <div id="users-result" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://java-web-api.up.railway.app/api/v1';
+
+        function logResult(elementId, message, isSuccess) {
+            const element = document.getElementById(elementId);
+            element.className = `result ${isSuccess ? 'success' : 'error'}`;
+            element.innerHTML = message;
+        }
+
+        async function testHealthCheck() {
+            const elementId = 'health-result';
+            logResult(elementId, '⏳ Testing...', true);
+            
+            try {
+                const response = await fetch(`${API_BASE}/health`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const headers = {};
+                response.headers.forEach((value, key) => {
+                    headers[key] = value;
+                });
+                
+                if (response.ok) {
+                    const data = await response.text();
+                    logResult(elementId, `
+                        <div>✅ <strong>SUCCESS!</strong></div>
+                        <div><strong>Response:</strong> ${data}</div>
+                        <div><strong>Status:</strong> ${response.status}</div>
+                        <div><strong>Headers:</strong></div>
+                        <pre>${JSON.stringify(headers, null, 2)}</pre>
+                    `, true);
+                } else {
+                    logResult(elementId, `❌ HTTP Error: ${response.status}`, false);
+                }
+            } catch (error) {
+                logResult(elementId, `❌ <strong>CORS Error:</strong> ${error.message}`, false);
+            }
+        }
+
+        async function testCorsPost() {
+            const elementId = 'cors-result';
+            logResult(elementId, '⏳ Testing POST...', true);
+            
+            try {
+                const response = await fetch(`${API_BASE}/cors-test`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        test: 'CORS test from browser',
+                        timestamp: new Date().toISOString(),
+                        origin: window.location.origin
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    logResult(elementId, `
+                        <div>✅ <strong>POST SUCCESS!</strong></div>
+                        <div><strong>Response:</strong></div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `, true);
+                } else {
+                    logResult(elementId, `❌ HTTP Error: ${response.status}`, false);
+                }
+            } catch (error) {
+                logResult(elementId, `❌ <strong>CORS Error:</strong> ${error.message}`, false);
+            }
+        }
+
+        async function testWithCustomHeaders() {
+            const elementId = 'preflight-result';
+            logResult(elementId, '⏳ Testing with custom headers...', true);
+            
+            try {
+                const response = await fetch(`${API_BASE}/health`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Custom-Header': 'test-value',
+                        'Authorization': 'Bearer test-token'
+                    }
+                });
+                
+                const headers = {};
+                response.headers.forEach((value, key) => {
+                    headers[key] = value;
+                });
+                
+                if (response.ok) {
+                    const data = await response.text();
+                    logResult(elementId, `
+                        <div>✅ <strong>Custom Headers SUCCESS!</strong></div>
+                        <div><strong>Response:</strong> ${data}</div>
+                        <div><strong>CORS Headers Found:</strong></div>
+                        <pre>${JSON.stringify(headers, null, 2)}</pre>
+                    `, true);
+                } else {
+                    logResult(elementId, `❌ HTTP Error: ${response.status}`, false);
+                }
+            } catch (error) {
+                logResult(elementId, `❌ <strong>CORS Error (Preflight failed):</strong> ${error.message}`, false);
+            }
+        }
+
+        async function testGetUsers() {
+            const elementId = 'users-result';
+            logResult(elementId, '⏳ Testing users endpoint...', true);
+            
+            try {
+                const response = await fetch(`${API_BASE}/users`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    logResult(elementId, `
+                        <div>✅ <strong>Users SUCCESS!</strong></div>
+                        <div><strong>Found ${data.length} users</strong></div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `, true);
+                } else {
+                    logResult(elementId, `❌ HTTP Error: ${response.status}`, false);
+                }
+            } catch (error) {
+                logResult(elementId, `❌ <strong>CORS Error:</strong> ${error.message}`, false);
+            }
+        }
+
+        // Auto-test basic functionality on load
+        window.onload = function() {
+            testHealthCheck();
+        };
+    </script>
+</body>
+</html>
