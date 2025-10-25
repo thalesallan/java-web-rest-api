@@ -39,16 +39,22 @@ public class RootController {
         );
         
         return ResponseEntity.ok(info);
-    }
-
-    @GetMapping("/status")
+    }    @GetMapping("/status")
     @Operation(summary = "Service Status", description = "Quick status check")
     @ApiResponse(responseCode = "200", description = "Service is running")
     public ResponseEntity<Map<String, String>> getStatus() {
         return ResponseEntity.ok(Map.of(
             "status", "UP",
             "service", "Java Web REST API",
-            "timestamp", java.time.Instant.now().toString()
+            "timestamp", java.time.Instant.now().toString(),
+            "port", System.getProperty("server.port", "8080")
         ));
+    }
+
+    @GetMapping("/health")
+    @Operation(summary = "Simple Health Check", description = "Minimal health check for Railway")
+    @ApiResponse(responseCode = "200", description = "Service is healthy")
+    public ResponseEntity<String> simpleHealth() {
+        return ResponseEntity.ok("OK");
     }
 }
