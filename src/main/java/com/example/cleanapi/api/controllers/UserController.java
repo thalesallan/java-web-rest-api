@@ -24,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users")
 @Tag(name = "Users", description = "User management operations")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class UserController {
     
     private final UserUseCase userUseCase;
