@@ -25,7 +25,7 @@ O projeto está estruturado em camadas bem definidas:
    - `config/` - Configurações da aplicação
 
 5. **Tests (Testes)**
-   - Testes unitários e de integração para todas as camadas
+   - Testes unitários
 
 ## 🚀 Tecnologias Utilizadas
 
@@ -175,6 +175,66 @@ Este projeto demonstra como aplicar conceitos de:
 - Exception Handling
 - API Documentation
 - Testing Strategies
+
+---
+## 📋 Tecnologias Utilizadas — Explicação
+
+### ☕ Java 17
+- O que é: Versão LTS do Java (lançada em 2021).  
+- Por que usar: Melhor desempenho, recursos modernos (records, pattern matching, text blocks) e suporte a longo prazo.  
+- No projeto: Linguagem base, aproveitando recursos modernos e segurança de tipo.
+
+### 🌱 Spring Boot 3.2.0
+- O que é: Framework que simplifica a criação de aplicações Java enterprise.  
+- Por que usar: Autoconfiguração, servidor embarcado, starters e prontidão para produção.  
+- No projeto: Base da API REST, gerencia injeção de dependência e configuração.
+
+### 🗃️ Spring Data JPA
+- O que é: Abstração sobre JPA para acesso a dados.  
+- Por que usar: Reduz boilerplate, fornece repositórios prontos e queries automáticas.  
+- No projeto: Camada de persistência com operações CRUD automáticas.
+
+### 💾 H2 Database
+- O que é: Banco de dados em memória, leve e rápido.  
+- Por que usar: Ideal para desenvolvimento e testes, sem instalação e com console web.  
+- No projeto: Armazenamento temporário para desenvolvimento e testes automatizados.
+
+### ✅ Bean Validation
+- O que é: Especificação Java para validação declarativa via anotações.  
+- Por que usar: Validações como @NotNull e @Email integradas ao fluxo do Spring.  
+- No projeto: Validação de DTOs de entrada para garantir integridade dos dados.
+
+### 📚 OpenAPI / Swagger
+- O que é: Especificação para documentação de APIs REST.  
+- Por que usar: Documentação interativa automática e padronizada.  
+- No projeto: Gera interface em /swagger-ui.html e JSON em /api-docs.
+
+### 🧪 JUnit 5
+- O que é: Framework moderno para testes unitários em Java.  
+- Por que usar: Assertions avançadas, extensibilidade e integração com IDEs.  
+- No projeto: Execução de testes unitários e de integração.
+
+### 🎭 Mockito
+- O que é: Framework para criação de mocks em testes.  
+- Por que usar: Isola dependências e permite testar unidades isoladas.  
+- No projeto: Mock de repositórios e dependências nos testes unitários.
+
+### 📦 Maven
+- O que é: Ferramenta de build e gerenciamento de dependências.  
+- Por que usar: Gerencia dependências, build e ciclo de vida do projeto.  
+- No projeto: Compila, testa e empacota a aplicação.
+
+### 🔗 Como elas trabalham juntas
+Maven → Java 17 → Spring Boot → Spring Data JPA → H2 Database → Bean Validation → OpenAPI/Swagger → JUnit 5 + Mockito
+
+(Fluxo: gerenciamento de dependências → linguagem → framework → persistência → banco em memória → validação → documentação → testes)
+
+### 🎯 Benefícios da stack
+- Produtividade: configuração mínima e recursos prontos.  
+- Qualidade: validações e testes automatizados.  
+- Manutenibilidade: código padronizado e modular.  
+- Desenvolvimento rápido: hot reload e banco em memória.  
+- Pronto para produção: suporte a métricas, health checks e logging.
 
 ---
 
