@@ -14,7 +14,8 @@ public class CleanApiApplication {
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {            @Override
+        return new WebMvcConfigurer() {
+            @Override
             public void addCorsMappings(CorsRegistry registry) {
                 // Configuração específica para API endpoints
                 registry.addMapping("/api/**")
@@ -32,16 +33,7 @@ public class CleanApiApplication {
                         .allowedHeaders("*")
                         .allowCredentials(false)
                         .maxAge(3600);
-                
-                // Configuração para Swagger UI HTML
-                registry.addMapping("/swagger-ui.html")
-                        .allowedOriginPatterns("*")
-                        .allowedMethods("GET", "OPTIONS")
-                        .allowedHeaders("*")
-                        .allowCredentials(false)
-                        .maxAge(3600);
-                
-                // Configuração para OpenAPI docs (padrão)
+                  // Configuração para OpenAPI docs
                 registry.addMapping("/v3/api-docs/**")
                         .allowedOriginPatterns("*")
                         .allowedMethods("GET", "OPTIONS")
@@ -49,8 +41,8 @@ public class CleanApiApplication {
                         .allowCredentials(false)
                         .maxAge(3600);
                 
-                // Configuração para OpenAPI docs (customizado)
-                registry.addMapping("/api-docs/**")
+                // Configuração para /api-docs (path customizado)
+                registry.addMapping("/api-docs")
                         .allowedOriginPatterns("*")
                         .allowedMethods("GET", "OPTIONS")
                         .allowedHeaders("*")
