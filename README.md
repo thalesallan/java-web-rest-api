@@ -198,8 +198,28 @@ curl -X POST https://sua-app.railway.app/api/v1/users \
 curl https://sua-app.railway.app/api/v1/users
 ```
 
-### ⚡ Deploy Automático
-Toda vez que você fizer `git push origin main`, a aplicação será automaticamente atualizada na plataforma!
+### ⚡ Deploy Automático Completo
+
+🔄 **Fluxo Automatizado Completo:**
+
+1. **📝 Commit com Conventional Commits**
+   ```bash
+   git commit -m "feat: nova funcionalidade incrível"
+   git push origin main
+   ```
+
+2. **🧪 Pipeline CI/CD Executa Automaticamente**
+   - ✅ Testes unitários
+   - 🔨 Build da aplicação
+   - 📦 Geração do JAR (46.4 MB)
+   - 🏷️ Criação de release (se commit relevante)
+
+3. **🚂 Deploy Automático no Railway**
+   - 🔔 Railway detecta mudanças no repositório
+   - 🚀 Deploy automático em ~5-10 minutos
+   - 🌐 Aplicação fica online automaticamente
+
+**📊 Monitoramento:** Toda vez que você fizer `git push origin main`, a aplicação será automaticamente atualizada na plataforma!
 
 ## 📚 Benefícios desta Arquitetura
 
