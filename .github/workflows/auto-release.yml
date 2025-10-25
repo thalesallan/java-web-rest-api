@@ -1,5 +1,5 @@
 # Workflow para criação automática de releases baseado em Conventional Commits
-name: 🚀 Auto Release
+name: 🚀 Release Automático
 
 on:
   push:
@@ -8,49 +8,61 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'chore(release)')"
+    if: "!contains(github.event.head_commit.message, 'chore(release)') && !contains(github.event.head_commit.message, '[skip ci]')"
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     
     steps:
-    - name: 📥 Checkout code
+    - name: 📥 Baixar código
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: ☕ Set up Node.js
+    - name: ☕ Configurar Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
 
-    - name: 📦 Install semantic-release
-      run: |
-        npm install -g semantic-release
-        npm install -g @semantic-release/changelog
-        npm install -g @semantic-release/git
-        npm install -g @semantic-release/github
+    - name: 📦 Instalar semantic-release
+      run: npm install semantic-release @semantic-release/github
 
-    - name: 🔧 Create semantic-release config
+    - name: 🔧 Criar configuração do semantic-release
       run: |
         cat > .releaserc.json << 'EOF'
         {
           "branches": ["main"],
+          "repositoryUrl": "https://github.com/${{ github.repository }}",
           "plugins": [
             "@semantic-release/commit-analyzer",
             "@semantic-release/release-notes-generator",
-            "@semantic-release/changelog",
-            "@semantic-release/github",
-            [
-              "@semantic-release/git",
-              {
-                "assets": ["CHANGELOG.md"],
-                "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-              }
-            ]
+            "@semantic-release/github"
           ]
         }
-        EOF
+        EOF    - name: 🔍 Verificar commits para release
+      id: check
+      run: |
+        # Verifica se há commits desde a última tag que justifiquem uma release
+        LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+        if [ -z "$LAST_TAG" ]; then
+          echo "Nenhuma tag anterior encontrada, tentará criar release"
+          echo "should_release=true" >> $GITHUB_OUTPUT
+        else
+          # Verifica commits desde a última tag
+          COMMITS=$(git log $LAST_TAG..HEAD --oneline --grep="^feat\|^fix\|^perf\|BREAKING CHANGE" || echo "")
+          if [ -n "$COMMITS" ]; then
+            echo "Commits encontrados para release:"
+            echo "$COMMITS"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "Nenhum commit encontrado para release"
+            echo "should_release=false" >> $GITHUB_OUTPUT
+          fi
+        fi
 
-    - name: 🏷️ Create automatic release
+    - name: 🏷️ Criar release automática
+      if: steps.check.outputs.should_release == 'true'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: npx semantic-release
