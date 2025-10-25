@@ -95,6 +95,8 @@ Após iniciar a aplicação, a documentação da API estará disponível em:
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
+| GET | `/` | Informações da API |
+| GET | `/status` | Status rápido da aplicação |
 | POST | `/api/v1/users` | Criar novo usuário |
 | GET | `/api/v1/users` | Listar todos os usuários |
 | GET | `/api/v1/users/{id}` | Buscar usuário por ID |
@@ -170,15 +172,22 @@ As configurações da aplicação estão no arquivo `application.properties`:
 ### 📋 URLs Importantes Após Deploy
 Substitua `{URL_DA_APLICACAO}` pela URL da sua plataforma:
 
-- **🏠 API Base**: `{URL_DA_APLICACAO}/`
+- **🏠 API Base**: `{URL_DA_APLICACAO}/` - Informações da API
+- **⚡ Status**: `{URL_DA_APLICACAO}/status` - Status rápido
 - **📚 Swagger UI**: `{URL_DA_APLICACAO}/swagger-ui.html`
 - **💚 Health Check**: `{URL_DA_APLICACAO}/api/v1/users/health`
 - **📖 OpenAPI Docs**: `{URL_DA_APLICACAO}/api-docs`
 
 ### 🧪 Testando a API Online
 ```bash
+# Status da API
+curl https://sua-app.railway.app/status
+
 # Health check
 curl https://sua-app.railway.app/api/v1/users/health
+
+# Informações da API
+curl https://sua-app.railway.app/
 
 # Criar usuário
 curl -X POST https://sua-app.railway.app/api/v1/users \

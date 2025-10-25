@@ -95,7 +95,15 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M9</version>
-            </plugin>
-        </plugins>
+            </plugin>        </plugins>
     </build>
+
+    <!-- Configuração para GitHub Packages -->
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/ThalesDev/java-web-rest-api-1</url>
+        </repository>
+    </distributionManagement>
 </project>
