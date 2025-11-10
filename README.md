@@ -95,8 +95,6 @@ Após iniciar a aplicação, a documentação da API estará disponível em:
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| GET | `/` | Informações da API |
-| GET | `/status` | Status rápido da aplicação |
 | POST | `/api/v1/users` | Criar novo usuário |
 | GET | `/api/v1/users` | Listar todos os usuários |
 | GET | `/api/v1/users/{id}` | Buscar usuário por ID |
